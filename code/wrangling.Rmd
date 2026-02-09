@@ -1,0 +1,31 @@
+---
+title: "R Does What Py Don't"
+name: "Hazel Lutz"
+date: "February 8, 2026"
+output: 
+  html_document:
+    theme: sandstone
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: hide
+---
+
+First, we'll install some packages that we'll be using for this, as well as EDA later (I'll adapt this file when the time comes).
+```{r packages}
+lapply(c("readr", "dplyr", "haven", "ggplot2"), library, character.only = TRUE)
+# haven is for dealing with stata format
+```
+
+```{r arabbarometer}
+data_dir = "../data/"
+arab8_dir = "../data/arabbarometer/alldata/arab8.csv"
+arab8 = read_csv(arab8_dir)
+head(arab8)
+```
+
+```{r americasbarometer}
+americas_dir = "../data/americasbarometer/americas.dta"
+americas = read_dta(americas_dir)
+colnames(americas)
+```
