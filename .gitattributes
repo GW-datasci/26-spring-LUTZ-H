@@ -1,0 +1,7 @@
+ filter=lfs diff=lfs merge=lfs -text
+data/afrobarometer/alldata/** filter=lfs diff=lfs merge=lfs -text
+data/arabbarometer/alldata/** filter=lfs diff=lfs merge=lfs -text
+data/americasbarometer/** filter=lfs diff=lfs merge=lfs -text
+data/afrobarometer/** filter=lfs diff=lfs merge=lfs -text
+data/afrobarometer/extras.zip filter=lfs diff=lfs merge=lfs -text
+data/arabbarometer/extras.zip filter=lfs diff=lfs merge=lfs -text
