@@ -11,30 +11,28 @@
 \section*{Weekly Progress (5 points)}
 % List below at least FIVE significant updates
 \begin{enumerate}
-    \item Spent a while acquainting myself further with git, especially git LFS (necessary given the size of some of the datasets I'm using). As the challenges demonstrate, this was far from a perfect experience. I intend to start anew with it next week rather than scrambling mid-commit.
-    \item Done some low level exploration of the data -- public opinion data remains the hardest to deal with, but it also remains what I'm most passionate about as well as theoretically very relevant to statebuilding and peacebuilding.
-    \item Furthered quantitative research -- was recommended a book, not on civil wars but on post-apartheid South Africa and the Truth and Reconciliation committee based on a very broad survey (very impressive!), and has thoroughly fleshed out the ways I consider the role of institutions in post-conflict statebuilding.
-    \item Definitionally, I believe I will be rather unopinionated on what constitutes a "civil war", though I will likely do some testing on different definitions of what exactly makes something a "civil war" to see whether conclusions will vary -- this could provide some sort of secondary result for my research. My default usage of what constitutes a civil war will be based on the Correlates of War project, most likely, as this remains a fairly authoritative resource. This coming week's definitional hurdle will be on defining "success of recovery", which I will once again look to quantitative studies to give a decent consideration of.
+    \item By far, the largest chunk of work this week has been reading literature for feature selection to narrow down the data to a workable level. Some of that literature is works already mentioned for this project, lots of academic article stored in the root directory for the class (not on GitHub due to licensing issues, but I can send those if you'd like), in addition to some new books I've been looking through. It's partially been gaining some theoretical background (one of the books especially is very theoretical, very embedded in ground-level discourse and metanalyses and semantics -- great context that has definitely encouraged me to be as metered with conclusions I draw and careful about the data I have used), and partially giving ideas and frameworks for the upcoming quantitative analysis. Regardless, an excellent time, but not the kind of work I can push to GitHub.
+    \item Also started some preliminary research on a methodology that seems interesting: Qualitative Comparative Analysis (QCA). I've been reading a textbook on it (specifically the one by Mello); it's a methodology pretty specific to social sciences that is guided by the intention to find necessary conditions for a given outcome and a recognition of numerous pathways to that -- so, in a civil war recovery context, perhaps economic growth is not necessary if local reconciliation between armed groups is extremely effective. I'm not committed to it at this point, but once all the data is together and after some early EDA (so during spring break, most likely), I'll be diving very hard into it to see if it's the direction I want to take this due to its unique theoretical contributions, especially as I seek to deal with a couple different cases of kinds of civil wars.
+    \item Have started setting up SQL tools to deal with data -- preferential over Python for being very lightweight and preferential over R due to the GUI being one that I like. As much as I adore using CLIs for everything, it can be kind of unpleasant when dealing with large amounts of data. I'm writing this with Neovim, for context.
+    \item This is very closely tied to the feature selection work, and in part inspired by the theoretical reading I've done -- I've been delving into the public opinion research codebooks to find connections between countries as well as the construction of economic and human rights indicators I'll be using. Everything should be fine, but some of it has inspired my leaning towards QCA for the time being methodologically since especially peacebuilding of a certain era has based itself in the imposition of certain institutions that may or may not be effective at a given time (e.g., in Bosnia, see [https://www.foreignaffairs.com/europe/bosnias-unfinished-peace]).
     \item 
-    \item [more]
 \end{enumerate}
 
 \section*{Challenges (3 points)}
 % List below at least THREE significant challenges
 \begin{enumerate}
-	\item Though I'm used to simple tasks with git, having to deal with git LFS was a major hurdle. Lots of troubleshooting, lots of stackexchange, and I still haven't fully gotten where I need to be with it. For the sake of making any progress at all, I just chose not to commit any of the data. For legal reasons, it may be best if I just store the data outside of the repository.
-	\item My early attempts at importing and EDA have gone horribly awry, as the datasets are all \emph{very} different, not only between organizations, but also within results from the same organization. I will always praise good data management. Public opinion data is not where one finds such things. Trying to import AmericasBarometer data crashed my computer. I will be finding new avenues to parse this, more than likely in a more efficient language (likely R).
-    \item 
-    \item [more]
+	\item Even SQL doesn't like my 1.4 GB .dat file! I guess not shocking. I swear if I ever am hosting data for the public to use it will not be like this. Trying it out on my PC now to see if that helps.
+	\item Making decisions is terrifying. I'm thinking of making the years analyzed cutoff for the conflict data to be post-9/11, as there were sharp and notable changes to US foreign policy around that time and, as a result, changes to a number of international institutional policy. There's some arguments to be made for the 90s, but I also can't get data that far back as reliably. Feature selection decisions are scaring me as well, but I'm erring on the side of being pretty lenient as far as what makes the cut (for now).
+	\item
 \end{enumerate}
 
 \section*{Code Commits (2 points)}
 % GitHub repo: [url of your GitHub project repo]
 % List below at least TWO significant code commits
 \begin{enumerate}
-	\item Early banging my head against a wall with data wrangling and cleaning and aggregating: https://github.com/GW-datasci/26-spring-LUTZ-H/commit/10776674bd5efb4f51f3f5ef2b7cbe723d0dc88a
-    \item 
-    \item [more]
+	\item Early work this week has been largely reading-based and does not have more than one code commit unfortunately. I have a big coding week ahead of me to make up for it. Technically there will be two commits, but this first one is just so I can clone it on my PC.
+    \item Started R imports and cleaning: \\
+	    https://github.com/GW-datasci/26-spring-LUTZ-H/commit/ec8d2c6f1619f4f895342983dc51553b3e30edb6
 \end{enumerate}
 
 \clearpage
