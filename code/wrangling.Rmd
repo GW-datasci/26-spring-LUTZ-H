@@ -17,15 +17,88 @@ lapply(c("readr", "dplyr", "haven", "ggplot2"), library, character.only = TRUE)
 # haven is for dealing with stata format
 ```
 
-```{r arabbarometer}
-data_dir = "../data/"
-arab8_dir = "../data/arabbarometer/alldata/arab8.csv"
-arab8 = read_csv(arab8_dir)
-head(arab8)
+```{r arabbarometer_cols}
+arab_dir = "./data/arabbarometer/alldata/arab" # for loop
+arab6_dir = paste(arab_dir, "6_", sep="")
+colnames_list = vector("list", 3)
+for (i in 1:3) {
+	current_csv_dir = paste(arab6_dir, i, ".csv", sep="")
+	colnames_list[[i]] = colnames(read_csv(current_csv_dir))
+}
+colnames_list
+# cols in first part not in second
+setdiff(colnames_list[[1]], colnames_list[[2]])
+# cols in second part not in first
+setdiff(coln
 ```
 
+```{r arabbarometer6_combine}
+data_dir = "./data/"
+arab_dir = "./data/arabbarometer/alldata/arab" # for loop
+arab6_dir = paste(arab_dir, "6_", sep="")
+arab6_df = data.frame()
+for (i in 1:3) {
+	current_csv_dir = paste(arab6_dir, i, ".csv", sep="")
+	current_df = read_csv(current_csv_dir)
+	arab6_df = bind_rows(arab6_df, current_df)
+}
+write_csv(arab6_df, "./data/arabbarometer/alldata/arab6.csv")
+```
+
+```{r arabbarometer}
+df_list = list()
+arab = data.frame()
+for (i in 1:8) {
+	current_csv_dir = paste(arab_dir, i, ".csv", sep="")
+	df_list[[i]] = read_csv(current_csv_dir) %>% 
+		rename_with(tolower) %>% 
+		mutate(across(everything(), as.character)) # ty stackexchange for the fix yayyyy
+}
+
+arab = bind_rows(df_list) 
+write.csv(arab, "./data/pruned/arab.csv")
+```
+
+
+```{r afrobarometer}
+df_list = list()
+afro_dir = "./data/afrobarometer/alldata/afro"
+afro = data.frame()
+for (i in 1:9) {
+	current_sav_dir = paste(afro_dir, i, ".sav", sep="")
+	df_list[[i]] = read_sav(current_sav_dir, encoding = "latin1") %>%  # issue with special characters and whatnot
+		rename_with(tolower) %>% # lowercases col names
+		mutate(across(everything(), as.character))
+}
+afro = bind_rows(df_list)
+write.csv(afro, "./data/pruned/afro.csv")
+```
+
+pais = country
+wave = wave of survey
+year = year of survey
+idnum = unique id
+prov/prov1t = province
+ur = 1: city, 2: suburbs/outskirts of city, 3: town near rural, 4: rural
+a4: most serious problem
+idio2: economic situation compared to 12 mos ago is 1: better, 2: same, 3: worse
+it1: community trust 1: very, 2: somewhat, 3: somewhat untrust,, 4: very untrust
+(1-7, not at all - a lot)
+b2: respect for political institutions of country
+b3: citizens'b asic rights protected by political system
+b4: pride of living under political system of country
+b6: how much should one support political system of country
+b47a: trust in elections
+m1: performance of president
+anestg: trust in national govt to "do what is right" (1-4, a lot to not at all)
+pn4: 1-4, very satisfied, satisfied, dissatisfied, very dissatisfied with the way democracy works in country
+aojg2n: likelihood of police to take seriously a woman being beaten by her partner (1: very likely, 2: somewhat likely, 3: a little likely, 4: not at all likely)
+mil10a: trust in China (1: very trustworth, 4: not at all trustworthy)
+mil10e: same for America
+
 ```{r americasbarometer}
-americas_dir = "../data/americasbarometer/americas.dta"
-americas = read_dta(americas_dir)
-colnames(americas)
+americas_dir = "./data/americasbarometer/americas.dta"
+americas_cols = c("pais", "wave", "year", "idnum", "prov", "prov1t", "ur", "a4", "idio2", "it1", "b2", "b3", "b4", "b6", "b47a", "m1", "anestg", "pn4", "aojg2n", "mil10a", "mil10e")
+americas = read_dta(americas_dir, col_select = americas_cols)
+write_csv(americas, "./data/pruned/americas.csv")
 ```
