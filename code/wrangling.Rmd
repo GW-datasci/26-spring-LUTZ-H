@@ -17,6 +17,7 @@ lapply(c("readr", "dplyr", "haven", "ggplot2"), library, character.only = TRUE)
 # haven is for dealing with stata format
 ```
 
+For ArabBarometer, there were three different segments to one survey wave, and so this was to check for discrepancies between them before opting to just include all columns to make one CSV, and then deal with any issues from there.
 ```{r arabbarometer_cols}
 arab_dir = "./data/arabbarometer/alldata/arab" # for loop
 arab6_dir = paste(arab_dir, "6_", sep="")
@@ -28,10 +29,9 @@ for (i in 1:3) {
 colnames_list
 # cols in first part not in second
 setdiff(colnames_list[[1]], colnames_list[[2]])
-# cols in second part not in first
-setdiff(coln
 ```
 
+Putting together the ArabBarometer Wave 6 CSVs
 ```{r arabbarometer6_combine}
 data_dir = "./data/"
 arab_dir = "./data/arabbarometer/alldata/arab" # for loop
@@ -45,6 +45,7 @@ for (i in 1:3) {
 write_csv(arab6_df, "./data/arabbarometer/alldata/arab6.csv")
 ```
 
+And then compiling all of those into one.
 ```{r arabbarometer}
 df_list = list()
 arab = data.frame()
@@ -59,20 +60,60 @@ arab = bind_rows(df_list)
 write.csv(arab, "./data/pruned/arab.csv")
 ```
 
+AfroBarometer was fairly similar with fewer issues.
+country: country
+urbrur: urban vs. rural (1 urban, 2 rural, 3 peri-urban)
+dateintr: date of interview 
+q1: age
+q3: direction of country (1 wrong, 2 right)
+q4a: economic condition (1 very bad, 5 very good)
+q5a: economic improvement in past 12 months (1 much worse, 5 much better)
+q5b: anticipated economic conditions (1 much worse, 5 much beter)
+q7a: felt unsafe in neighborhood (0 never, 4 always)
+q9a: felt free speech (1 none, 4 completely)
+q9b: felt free organization (1 none, 4 completely)
+q9c: felt free voting (1 none, 4 completely)
+q14a: felt freeness of previous election (1 none, 4 completely) 
+q14c: fear of political violence (0 a lot, 3 not at all)
+q23: support for democracy (1 doesn't matter, 2, sometimes preferable, 3 always preferable)
+q30: felt democracy (1 not a democracy, 4 full democracy)
+q31: satisfaction with democracy (0 not a democracy, 1 not satisfied, 4 very satisfied)
+q32a: democratic change compared to five years ago (1 much less demo, 5 much more demo)
+q32b: anticipated democratic change in five years (1 much less, 5 much more) 
+q33a: does competition between political parties lead to violent conflict? (0 never, 3 always)
+q33e: unequal treatment under law (0 never, 3 always)q37a: trust president (0 not at all, 3 a lot)
+q37b: trust parliament ("")
+q37d: trust local government ("")
+q37e: trust ruling party ("")
+q37f: trust opposition parties ("")
+q37g: trust police ("")
+q37h: trust army ("")
+q45pt1: most important issue *
+q45pt2 (and pt3): other choices to above
+q53b: likelihood of women reporting gender-based violence being taken seriously by police (1 very unlikely, 4 very likely)
+q87e: fine having neighbors of diff political party (1 strongly dislike, 5 strongly like, 3 would not care) *
+q88a: family member marrying outside ethnic group (1 strongly dislike, 5 strongly like, 3 would not care) *
+a88b: others see respondent as citizen like them (q88b)
+
+
 
 ```{r afrobarometer}
 df_list = list()
 afro_dir = "./data/afrobarometer/alldata/afro"
 afro = data.frame()
+afro_cols = c("country", "urbrur", "dateintr", "q1a", "q1b", "q3a", "q3b", "q4a", "q5a", "q5b", "q7a", "q9a", "q9b", "q9c", "q14", "q14a", "q14c", "q23", "q30", "q31", "q32", "q33", "q37", "q44pt1", "q44pt2", "q44pt3", "q45pt1", "q45pt2", "q45pt3", "q53b", "q88", "q32a", "q32b", "q88a", "q88b", "q87e")
 for (i in 1:9) {
 	current_sav_dir = paste(afro_dir, i, ".sav", sep="")
 	df_list[[i]] = read_sav(current_sav_dir, encoding = "latin1") %>%  # issue with special characters and whatnot
-		rename_with(tolower) %>% # lowercases col names
+		rename_with(tolower) %>% # lowercases col names (in case of some caps, some lower)
 		mutate(across(everything(), as.character))
 }
-afro = bind_rows(df_list)
+afro = bind_rows(df_list) %>%
+	select(afro_cols)
+colnames(afro)
 write.csv(afro, "./data/pruned/afro.csv")
 ```
+
 
 pais = country
 wave = wave of survey
@@ -101,4 +142,38 @@ americas_dir = "./data/americasbarometer/americas.dta"
 americas_cols = c("pais", "wave", "year", "idnum", "prov", "prov1t", "ur", "a4", "idio2", "it1", "b2", "b3", "b4", "b6", "b47a", "m1", "anestg", "pn4", "aojg2n", "mil10a", "mil10e")
 americas = read_dta(americas_dir, col_select = americas_cols)
 write_csv(americas, "./data/pruned/americas.csv")
+```
+
+Now for the conflict data. The conflict type dataset did not provide me with everything I was looking for, which means I may have to resort to a different database for this. On the search for one as I type. More specifically, it just doesn't have enough data for what I'm looking for, andit also doesn't classify by external intervention in the way I would (will elaborate more in properly typing it up).
+```{r ucdp_conflicts}
+ucdp_conflict_df = read_csv("./data/UcdpPrioConflict_v25_1.csv")  # this is for the list of valid conflicts
+colnames(ucdp_conflict_df)
+head(ucdp_conflict_df)
+unique(ucdp_conflict_df$type_of_conflict)  # focused on type_of_conflict == 3 (intrastate, no external inv) and type_of_conflict == 4 (intrastate, external inv)
+ucdp_conflict_df$ep_end_date = as.POSIXct(ucdp_conflict_df$ep_end_date)
+cutoff_date = as.POSIXct("2002-01-01")
+conflicts_no_ext_df = ucdp_conflict_df %>%
+	filter(ep_end_date >= cutoff_date, type_of_conflict == 3, intensity_level == 2)  # intensity_level == 2 is war
+conflicts_ext_df = ucdp_conflict_df %>%
+	filter(ep_end_date >= cutoff_date, type_of_conflict == 4, intensity_level == 2)
+write_csv(conflicts_no_ext_df, "./data/pruned/conflicts_no_ext.csv")  # these are both giving rather small datasets unfortunately
+write_csv(conflicts_ext_df, "./data/pruned/conflicts_ext.csv")
+```
+
+The GED by UCDP has very precise location data -- might be worth studying in the future the efficacy of various things on a regional level -- that is, comparing at a city or municipality level. But that's not the current goal; in some ways this will be a slight pain to work with, as it provides data on many smaller instances of conflict rather than cumulative info, but I'm sure it'll be useful somehow.
+```{r ucdp_ged}
+ucdp_ged_df = read_csv("./data/GEDEvent_v25_1.csv")  
+colnames(ucdp_ged_df)
+head(ucdp_ged_df)
+filtered_ged_df = ucdp_ged_df %>%
+	filter(year >= 2002, type_of_violence == 1)
+write_csv(filtered_ged_df, "./data/pruned/filtered_ged.csv")
+```
+
+
+```{r selecting_survey_cols}
+afro_df = read_csv("./data/pruned/afro.csv")
+arab_df = read_csv("./data/pruned/arab.csv")
+colnames(arab_df)
+colnames(afro_df)
 ```

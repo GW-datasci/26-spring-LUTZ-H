@@ -1,0 +1,5 @@
+conflict_id,location,side_a,side_a_id,side_a_2nd,side_b,side_b_id,side_b_2nd,incompatibility,territory_name,year,intensity_level,cumulative_intensity,type_of_conflict,start_date,start_prec,start_date2,start_prec2,ep_end,ep_end_date,ep_end_prec,gwno_a,gwno_a_2nd,gwno_b,gwno_b_2nd,gwno_loc,region,version
+11346,Libya,Government of Libya,111,Government of Zimbabwe (Rhodesia),"Forces of Muammar Gaddafi, NTC","1126, 1127",NA,2,NA,2011,2,1,4,2011-02-28,1,2011-03-04,1,1,2011-11-23T00:00:00Z,NA,620,552,NA,NA,620,4,25.1
+13246,Ukraine,Government of Ukraine,61,NA,DPR,5840,Government of Russia (Soviet Union),1,Donetsk,2014,2,1,4,2014-04-08,1,2014-05-02,1,1,2014-09-15T00:00:00Z,NA,369,NA,NA,365,369,1,25.1
+13247,Ukraine,Government of Ukraine,61,NA,LPR,5839,Government of Russia (Soviet Union),1,Lugansk,2014,2,1,4,2014-05-04,1,2014-06-14,1,1,2014-09-17T00:00:00Z,NA,369,NA,NA,365,369,1,25.1
+267,Ethiopia,Government of Ethiopia,97,Government of Eritrea,"GLF, TPLF","410, 8196",NA,2,NA,2022,2,1,4,1960-12-17,2,2020-11-04,1,1,2022-11-27T00:00:00Z,NA,530,531,NA,NA,530,4,25.1
