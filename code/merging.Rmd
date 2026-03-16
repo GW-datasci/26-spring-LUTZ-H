@@ -1,0 +1,69 @@
+---
+title: "Merging Datasets"
+name: "Hazel Lutz"
+date: "March 16, 2026"
+output: 
+  html_document:
+    theme: sandstone
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: hide
+---
+
+```{r packages}
+lapply(c("readr", "dplyr", "haven", "ggplot2"), library, character.only = TRUE)
+# haven is for dealing with stata format
+```
+
+First, just importing from all of my CSVs.
+```{r importing}
+pruned_dir = "./data/pruned/"
+intl_cow = read_csv(paste(pruned_dir, "intnl_filtered_cow.csv", sep=""))
+nonintl_cow = read_csv(paste(pruned_dir, "nonintnl_filtered_cow.csv", sep=""))
+afro = read_csv(paste(pruned_dir, "afro.csv", sep=""))
+americas = read_csv(paste(pruned_dir, "americas.csv", sep=""))
+```
+
+```{r exploring_pub_op}
+colnames(afro)
+colnames(americas)
+
+afro = afro %>%
+	rename(
+	       country = country,
+	       urbrur = urbrur,
+	       age = q1a,
+	       country_dir = q3a,
+	       economy_eval = q4a,
+	       economic_improve = q5a,
+	       anticipated_economy = q5b,
+	       felt_safety = q7a,
+	       felt_free_speech = q9a,
+	       felt_free_org = q9b,
+	       felt_free_voting = q9c,
+	       felt_election_freedom = q14a,
+	       fear_political_violence = q14c,
+	       support_dem = q23,
+	       felt_democracy = q31,
+	       felt_dem_change = q32a,
+	       anticipated_dem_change = q32b,
+	       political_competition_to_violence = q33a,
+	       unequality_under_law = q33e,
+	       trust_pres = q37a,
+	       trust_parl = q37b,
+	       trust_local_govt = q37d,
+	       trust_ruling_party = q37e,
+	       trust_opp_party = q37f,
+	       trust_poilice = q37g,
+	       trust_army = q37h,
+	       most_important_issue1 = q45pt1,
+	       most_important_issue2 = q45pt2,
+	       most_important_issue3 = q45pt3,
+	       gender_violence_taken_seriously = q53b,
+	       neighbors_diff_party = q87e,
+	       marry_diff_party = q88a,
+	       mutual_citizenship = q88b
+	)
+# DATE COLUMN NON EXISTENT FOR WAVE 1? ARE YOU JOKING?
+```
