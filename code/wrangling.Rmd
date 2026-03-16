@@ -160,14 +160,14 @@ write_csv(conflicts_no_ext_df, "./data/pruned/conflicts_no_ext.csv")  # these ar
 write_csv(conflicts_ext_df, "./data/pruned/conflicts_ext.csv")
 ```
 
-The GED by UCDP has very precise location data -- might be worth studying in the future the efficacy of various things on a regional level -- that is, comparing at a city or municipality level. But that's not the current goal; in some ways this will be a slight pain to work with, as it provides data on many smaller instances of conflict rather than cumulative info, but I'm sure it'll be useful somehow.
+Instead, I'm pivoting to the war database being used to Correlates of War, which has less recent data but has a more comprehensive list of conflicts. Will have to compare these two datasets to extract the best results.
 ```{r ucdp_ged}
-ucdp_ged_df = read_csv("./data/GEDEvent_v25_1.csv")  
-colnames(ucdp_ged_df)
-head(ucdp_ged_df)
-filtered_ged_df = ucdp_ged_df %>%
-	filter(year >= 2002, type_of_violence == 1)
-write_csv(filtered_ged_df, "./data/pruned/filtered_ged.csv")
+cow_df = read_csv("./data/Intra-State-Wars-v5.1/INTRA-STATE WARS v5.1 CSV.csv")  
+colnames(cow_df)
+head(cow_df)
+nonintnl_filtered_cow_df = cow_df %>%
+	filter(EndYr1 >= 1990, Intnl == 0)
+write_csv(nonintnl_filtered_cow_df, "./data/pruned/nonintnl_filtered_cow.csv")
 ```
 
 
