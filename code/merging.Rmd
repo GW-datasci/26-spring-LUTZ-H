@@ -21,15 +21,15 @@ First, just importing from all of my CSVs.
 pruned_dir = "./data/pruned/"
 intl_cow = read_csv(paste(pruned_dir, "intnl_filtered_cow.csv", sep=""))
 nonintl_cow = read_csv(paste(pruned_dir, "nonintnl_filtered_cow.csv", sep=""))
-afro = read_csv(paste(pruned_dir, "afro.csv", sep=""))
-americas = read_csv(paste(pruned_dir, "americas.csv", sep=""))
+afro_old = read_csv(paste(pruned_dir, "afro.csv", sep=""))
+americas_old = read_csv(paste(pruned_dir, "americas.csv", sep=""))
 ```
 
 ```{r exploring_pub_op}
 colnames(afro)
 colnames(americas)
 
-afro = afro %>%
+afro = afro_old %>%
 	rename(
 	       country = country,
 	       urbrur = urbrur,
@@ -65,5 +65,29 @@ afro = afro %>%
 	       marry_diff_party = q88a,
 	       mutual_citizenship = q88b
 	)
-# DATE COLUMN NON EXISTENT FOR WAVE 1? ARE YOU JOKING?
+```
+
+```{r}
+americas = americas_old %>% 
+	rename(
+	       country = pais,
+	       wave = wave,
+	       year = year,
+	       idnum = idnum,
+	       province = prov,
+	       urbrur = ur,
+	       most_important_issue1 = a4,
+	       economic_improve = idio2,
+	       community_trust = it1,
+	       respect_political_institutions = b2,
+	       rights_respected = b3,
+	       pride_political_system = b4,
+	       support_political_system = b6,
+	       trust_in_elections = b47a,
+	       presidential_performance = m1,
+	       trust_in_govt = anestg,
+	       democracy_performance = pn4,
+	       gender_violence_taken_seriously = aojg2n
+	)
+# DATE COLUMN NON EXISTENT FOR WAVE 1? ARE YOU JOKING
 ```

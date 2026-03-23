@@ -1,0 +1,68 @@
+---
+title: "QCA"
+name: "Hazel Lutz"
+date: "March 23, 2026"
+output: 
+  html_document:
+    theme: sandstone
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: hide
+---
+
+```{r packages}
+lapply(c("readr", "dplyr", "haven", "ggplot2", "QCA"), library, character.only = TRUE)
+# haven is for dealing with stata formata
+```
+
+Including some description of QCA for paper here:
+
+The methodology selected for this study is Qualitative Comparative Analysis (QCA), a social scientific technique described by Ragin in 1987 that identifies conditions for a desired outcome: in this case, success of recovery after a civil war three years later. QCA will be performed on a number of factors identified by theoretical research as relevant to this outcome (minutia detail later). Though previous studies have analyzed the success of peacekeeping operations after civil wars with a longer time frame than the present one (Olsen, 2024), this study's narrow scope is focused on discerning differences between internationalized and non-internationalized civil wars by performing QCA on two separate datasets distinguished by this difference. Therefore, the use of QCA is predominantly explanatory and designed to contribute to and support theoretical research on civil war recovery by testing existing theory (on what is influential for recovery) and potentially extending an important theoretical distinction (on whether the internationalization of civil wars is relevant to recovery).
+
+Qualitative Comparative Analysis is heavily based on mathematical set theory: its fundamental unit of analysis is 
+
+QCA is partially limited by the few number of conditions that can be effectively used with it: while methodologies like linear regression are capable of handling vast numbers of potential regressors related to the studied outcome, the use of truth tables for QCA means that, given $k$ conditions, the number of rows in the truth table is $2^k$ (since there must be one row for each combination of boolean true/false conditions). Given the few number of cases QCA is designed to study, this means that, given datasets like the ones used here with 30-50 different cases, only 5-6 conditions should be analyzed. The scope of this study is therefore vastly different from other methodologies. It does not seek to provide all, or even a significant amount, of the explanatory factors for the success or failure of civil war recovery: instead, it quantitatively evaluates the relevance of the distinction between internationalized and non-internationalized civil wars to be elucidated by further study. (much fo this is from Mello, p. 64) In light of this, "QCA studies should always provide a careful *justification* for their selection of conditions" (Mello, p. 66). TRANSITION TO NEXT SUBSECTION ON MY DATA
+
+On Data (all variables considered, which ones selected, and why; new para: cutoff points for membership -- substantially reference [this](https://cran.r-project.org/web/packages/QCA/QCA.pdf))
+
+Use of QCA to test theory is frequently done (see p. 50 of Mello textbook, footnote 8); 
+Discussion of QCA in pol. (see Ide and Mello, 2022)
+
+Should here formally declare hypotheses
+
+```{r testing}
+data(LR)  # raw data
+data(LC)  # crisp set
+data(LM)  # multi-value crisp set
+data(LF)  # fuzzy set LR
+
+# cols
+# DEV: GDP per capita; 
+	# = 0 if < 550 USD for LC
+	# also = 1 if < 850 and = 2 for >= 850 for LM
+# URB: percent of pop in towns with >=20000 residents
+	# = 0 if < 50%
+# LIT: percent of literate population
+	# = 0 if < 75%
+# IND: percent of industrial labor force
+	# = 0 if < 30%
+# STB: number of cabinets governed in period 
+	# = 0 if >= 10
+# SURV: outcome; survival of democracy inter-war
+	# = 0 if <0
+
+# here had fun with looking at the datsets
+# testing calibration
+calibrate(LR$DEV, type="crisp", thresholds = c(550, 850)) 
+LM$DEV
+# these are the same, yay!
+calibrate(LR$DEV, type="fuzzy", thresholds = "e=
+```
+"The intermediate-set point is the value where there is maximum ambiguity as to whether a case is more in or more out of the target set" (Pappas and Woodsite, 2021, p. 8).
+
+Thresholds for normally distributed data should be 95th, 50th, and 5th percentiles (so test for normality with quantitative conditions or transform to normality \[is that too much?\])
+
+
+Direct or indirect (look into this)
+
