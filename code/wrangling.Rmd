@@ -177,3 +177,11 @@ arab_df = read_csv("./data/pruned/arab.csv")
 colnames(arab_df)
 colnames(afro_df)
 ```
+
+```{r vdem}
+vdem = read_csv("./data/V-Dem-CY-FullOthers-v16_csv/V-Dem-CY-Full+Others-v16.csv")
+vdem_filtered = vdem %>%
+	select(country_name, year, v2x_polyarchy, v2x_partipdem, v2x_egaldem, v2x_accountability, e_peaveduc, e_gdppc, e_total_fuel_income_pc)
+# these are: electoral dem, participatory dem, egalitarian dem, accountability of government, education, gdp per captia, petroleum/coal/natural gas wealth)
+
+```
