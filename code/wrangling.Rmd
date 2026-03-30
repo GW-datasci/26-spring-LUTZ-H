@@ -44,19 +44,60 @@ for (i in 1:3) {
 }
 write_csv(arab6_df, "./data/arabbarometer/alldata/arab6.csv")
 ```
+ID
+DATE
+Q13: 1 = urban, 2 = rural, 3= camp
+Q2061A: most important issue
+Q101: current economic situation in country: 1= very good, 2=good, 3=bad, 4=very bad
+Q102: anticipated economic in next few years in country: 1 much better, 2 somewhat better, 3 same, 4 somewhat worse, 5 much worse
+Q103: trust others (1) or be careful with others (2)
+trust in institutions (1 a great deal, 2 quite a lot, 3 not a lot, 4 none at all)
+Q201A_1: government
+Q201A_3 parliament
+Q201A_5: local government
+Q201A_31B: president/head of state
+Q201A_31C: prime minister/had of government
+Q201B_6: army
+Q201B_4: police
+Q105A: safety of neighborhood (1 very safe, 2 somewhat, 3 somewhat, 4 very unsafe)
+Q276: felt responsiveness of government (1 very, 2 largely, 3 not vary, 4 not at all)
+Q521_1: felt freedom to express opinions (1 guaranteed greatly, 2 guaranteed mediumly, 3 guaranteed limitedly, 4 not guaranteed at all)
+Q511: felt democracy (0-10, none to as democratic as possible)
+Q867A: my life in relation to parents' lives (1 better, 2 same, 3 worse)
+Q867B: same but for if children's will (1 better, 2 same, 3 worse)
+
+
+
 
 And then compiling all of those into one.
 ```{r arabbarometer}
 df_list = list()
+arab_cols = c("id", "wave", "dateintr", "q13", "q2061a", "q101", "q102", "q103", "q201a_1", "q201a_3", "q201a_5", "q201a_31b", "q201a_31c", "q201b_6", "q201b_4", "q105a", "q276", "q521_1", "q511", "q867a", "q867b")
+
+wave_dates = c("2006-2009", "2010-2011", "2012-2014", "2016-2017", "2018-2019", "July 2020 - April 2021")
 arab = data.frame()
 for (i in 1:8) {
 	current_csv_dir = paste(arab_dir, i, ".csv", sep="")
-	df_list[[i]] = read_csv(current_csv_dir) %>% 
+	current_df = read_csv(current_csv_dir) %>%
+		rename_with(tolower)
+
+	# this next chunk is to deal with renaming the date column since R interprets it as a function in case there is no date column to begin with which is dealt with later. sigh 
+	if (!"dateintr" %in% colnames(current_df)) {
+		if ("date" %in% colnames(current_df)) {
+			current_df = current_df %>% rename(dateintr = date)
+		} else {
+			current_df = current_df %>% mutate(dateintr = NA_character_)
+		}
+	}
+	df_list[[i]] = current_df %>% 
 		rename_with(tolower) %>% 
+		mutate(wave = as.character(i)) %>%
+		mutate(dateintr = if (i <= 6) wave_dates[i] else as.character(dateintr)) %>%
 		mutate(across(everything(), as.character)) # ty stackexchange for the fix yayyyy
 }
-
-arab = bind_rows(df_list) 
+arab = bind_rows(df_list) %>%
+	select(arab_cols)
+colnames(arab)
 write.csv(arab, "./data/pruned/arab.csv")
 ```
 
@@ -101,12 +142,14 @@ a88b: others see respondent as citizen like them (q88b)
 df_list = list()
 afro_dir = "./data/afrobarometer/alldata/afro"
 afro = data.frame()
-afro_cols = c("country", "urbrur", "dateintr", "q1a", "q1b", "q3a", "q3b", "q4a", "q5a", "q5b", "q7a", "q9a", "q9b", "q9c", "q14", "q14a", "q14c", "q23", "q30", "q31", "q32", "q33", "q37", "q44pt1", "q44pt2", "q44pt3", "q45pt1", "q45pt2", "q45pt3", "q53b", "q88", "q32a", "q32b", "q88a", "q88b", "q87e")
+afro_cols = c("country", "urbrur", "wave", "dateintr", "q1a", "q1b", "q3a", "q3b", "q4a", "q5a", "q5b", "q7a", "q9a", "q9b", "q9c", "q14", "q14a", "q14c", "q23", "q30", "q31", "q32", "q33", "q37", "q44pt1", "q44pt2", "q44pt3", "q45pt1", "q45pt2", "q45pt3", "q53b", "q88", "q32a", "q32b", "q88a", "q88b", "q87e")
 for (i in 1:9) {
 	current_sav_dir = paste(afro_dir, i, ".sav", sep="")
 	df_list[[i]] = read_sav(current_sav_dir, encoding = "latin1") %>%  # issue with special characters and whatnot
 		rename_with(tolower) %>% # lowercases col names (in case of some caps, some lower)
-		mutate(across(everything(), as.character))
+		mutate(wave = as.character(i)) %>%
+		mutate(across(everything(), as.character)) %>%
+		mutate(dateintr = if_else(wave == "1" & is.na(dateintr), "1999-2001", dateintr))
 }
 afro = bind_rows(df_list) %>%
 	select(afro_cols)
@@ -183,5 +226,5 @@ vdem = read_csv("./data/V-Dem-CY-FullOthers-v16_csv/V-Dem-CY-Full+Others-v16.csv
 vdem_filtered = vdem %>%
 	select(country_name, year, v2x_polyarchy, v2x_partipdem, v2x_egaldem, v2x_accountability, e_peaveduc, e_gdppc, e_total_fuel_income_pc)
 # these are: electoral dem, participatory dem, egalitarian dem, accountability of government, education, gdp per captia, petroleum/coal/natural gas wealth)
-
+write_csv(vdem_filtered, "./data/pruned/vdem.csv")
 ```

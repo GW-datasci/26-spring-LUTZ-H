@@ -26,8 +26,8 @@ americas_old = read_csv(paste(pruned_dir, "americas.csv", sep=""))
 ```
 
 ```{r exploring_pub_op}
-colnames(afro)
-colnames(americas)
+colnames(afro_old)
+colnames(americas_old)
 
 afro = afro_old %>%
 	rename(
