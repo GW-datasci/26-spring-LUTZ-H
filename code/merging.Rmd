@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r packages}
-lapply(c("readr", "dplyr", "haven", "ggplot2"), library, character.only = TRUE)
+lapply(c("readr", "dplyr", "tidyr", "haven", "ggplot2"), library, character.only = TRUE)
 # haven is for dealing with stata format
 ```
 
@@ -21,8 +21,10 @@ First, just importing from all of my CSVs.
 pruned_dir = "./data/pruned/"
 intl_cow = read_csv(paste(pruned_dir, "intnl_filtered_cow.csv", sep=""))
 nonintl_cow = read_csv(paste(pruned_dir, "nonintnl_filtered_cow.csv", sep=""))
+vdem = read_csv(paste(pruned_dir, "vdem.csv", sep=""))
 afro_old = read_csv(paste(pruned_dir, "afro.csv", sep=""))
 americas_old = read_csv(paste(pruned_dir, "americas.csv", sep=""))
+arab_old = read_csv(paste(pruned_dir, "arab.csv", sep=""))
 ```
 
 ```{r exploring_pub_op}
@@ -47,24 +49,18 @@ afro = afro_old %>%
 	       support_dem = q23,
 	       felt_democracy = q31,
 	       felt_dem_change = q32a,
-	       anticipated_dem_change = q32b,
-	       political_competition_to_violence = q33a,
-	       unequality_under_law = q33e,
-	       trust_pres = q37a,
-	       trust_parl = q37b,
-	       trust_local_govt = q37d,
-	       trust_ruling_party = q37e,
-	       trust_opp_party = q37f,
-	       trust_poilice = q37g,
-	       trust_army = q37h,
+anticipated_dem_change = q32b,
+		democracy_over_efficacy = q33,
+		role_of_opposition = q37,
 	       most_important_issue1 = q45pt1,
 	       most_important_issue2 = q45pt2,
-	       most_important_issue3 = q45pt3,
+most_important_issue3 = q45pt3,
 	       gender_violence_taken_seriously = q53b,
 	       neighbors_diff_party = q87e,
 	       marry_diff_party = q88a,
 	       mutual_citizenship = q88b
-	)
+	) %>%
+	mutate(economic_improve = if_else(economic_improve %in% c(1:5), as.character(economic_improve), NA_character_))
 ```
 
 ```{r}
@@ -88,6 +84,128 @@ americas = americas_old %>%
 	       trust_in_govt = anestg,
 	       democracy_performance = pn4,
 	       gender_violence_taken_seriously = aojg2n
-	)
+	) %>%
+	mutate(economic_improve = if_else(economic_improve %in% c(1:3), as.character(economic_improve), NA_character_))
 # DATE COLUMN NON EXISTENT FOR WAVE 1? ARE YOU JOKING
 ```
+
+```{r}
+arab = arab_old %>%
+	rename(
+	       urbrur = q13,
+	       most_important_issue1 = q2061a,
+	       current_economy = q101,
+	       anticipated_economy = q102,
+	       community_trust = q103,
+	       economic_improve = q114,
+	       trust_in_govt = q201a_1,
+	       trust_in_parliament = q201a_3,
+	       trust_local_govt = q201a_5,
+	       trust_pres = q201a_31b,
+	       trust_pm = q201a_31c,
+	       trust_army = q201b_6,
+	       trust_police = q201b_4,
+	       felt_safety = q105a,
+	       felt_responsiveness = q276,
+	       felt_free_expression = q521_1,
+	       felt_improvement_prev_generation = q867a,
+	       felt_improvement_next_generation = q867b,
+	       felt_democracy = q511
+	       ) %>%
+		mutate(economic_improve = if_else(economic_improve %in% c(1:3), as.character(economic_improve), NA_character_))
+```
+
+```{r merge_for_now}
+intl_merged = intl_cow %>%
+	pivot_longer(
+		     cols = matches("^(Start|End)(Mo|Dy|Yr)\\d+$"),
+		     names_to = c(".value", "episode"),
+		     names_pattern = "([A-Za-z]+)(\\d+)"
+	) %>%
+	filter(EndYr != -8) %>%
+	mutate(episode = as.numeric(episode)) %>%
+	group_by(WarNum) %>%
+	mutate(is_last_endyr = episode == max(episode)) %>%
+	ungroup()
+intl_merged_filtered = intl_merged %>%
+	select(WarNum, WarName, SideA, episode, StartYr, EndYr, is_last_endyr, TotalBDeaths)
+
+nonintl_merged = nonintl_cow %>%
+	pivot_longer(
+		     cols = matches("^(Start|End)(Mo|Dy|Yr)\\d+$"),
+		     names_to = c(".value", "episode"),
+		     names_pattern = "([A-Za-z]+)(\\d+)"
+	) %>%
+	filter(EndYr != -8) %>%
+	mutate(episode = as.numeric(episode)) %>%
+	group_by(WarNum) %>%
+	mutate(is_last_endyr = episode == max(episode)) %>%
+	ungroup()
+nonintl_merged_filtered = nonintl_merged %>%
+	select(WarNum, WarName, SideA, episode, StartYr, EndYr, is_last_endyr, TotalBDeaths)
+nonintl_merged_filtered
+
+vdem_prep = vdem %>%
+	arrange(country_name, year) %>%
+	group_by(country_name) %>%
+	mutate(
+	       gdppc_next = lead(e_gdppc, n=1, order_by = year),
+	       partipdem_next = lead(v2x_partipdem, n=1, order_by = year),
+	       fuel_next = lead(e_total_fuel_income_pc, n=1, order_by = year),
+	       gdppc_diff = gdppc_next - e_gdppc,
+	       partipdem_diff = partipdem_next - v2x_partipdem
+	) %>%
+	ungroup() %>%
+	select(country_name, year, gdppc_diff, partipdem_diff, fuel_next)
+
+full_intl = intl_merged_filtered %>%
+	left_join(
+		  vdem_prep,
+		  by = c("SideA" = "country_name", "EndYr" = "year")
+	) %>%
+	select(WarNum, WarName, SideA, episode, EndYr, is_last_endyr, TotalBDeaths, gdppc_diff, partipdem_diff, fuel_next)
+
+full_nonintl = nonintl_merged_filtered %>%
+	left_join(
+		  vdem_prep,
+		  by = c("SideA" = "country_name", "EndYr" = "year")
+	) %>%
+	select(WarNum, WarName, SideA, episode, EndYr, is_last_endyr, TotalBDeaths, gdppc_diff, partipdem_diff, fuel_next)
+
+write_csv(full_intl, "./data/pruned/intl.csv")
+write_csv(full_nonintl, "./data/pruned/nonintl.csv")
+```
+
+QCA cols:
+* previous economic improvement (check scales) (fallback to other indicators)
+  	* fuzzy set: full membership if moderate improvement, full nonmembership at slight deterioration, crossover point at "staying the same"
+* community trust (no replacement)
+  	* full membership at any form of agreeing, full nonmembership at any form of disagreeing, crossover point around neutral
+* differential between trust in national and local government 
+  	* generally, full membership when national is at least that of local, full nonmembership when natinal is substantially worse than local, crossover point when slightly worse
+* democratic performance (partipdem) (v-dem)
+  	* fuzzy set based on descriptive statistics most likely (maybe focus on increase from previous year)?
+* petroleum/coal/natural gas 
+  	* fuzzy set based on descriptive statistics of vdem e_total_fuel_income_pc
+* total deaths in wartime
+  	* fuzzy set -- can probably get away with descriptive statistics?
+* peacekeeping operations (would be good but would have to be done manually -- perhaps olsen has that coding done already?)
+  	* crisp set
+
+QCA cols:
+* previous economic improvement (check scales) (fallback to other indicators)
+  	* fuzzy set: full membership if moderate improvement, full nonmembership at slight deterioration, crossover point at "staying the same"
+* differential between trust in national and local government (any other ways to check this?)
+  	* generally, full membership when national is at least that of local, full nonmembership when natinal is substantially worse than local, crossover point when slightly worse
+* democratic performance (partipdem) (v-dem)
+  	* fuzzy set based on descriptive statistics most likely (maybe focus on increase from previous year)?
+* petroleum/coal/natural gas (v-dem)
+  	* fuzzy set based on descriptive statistics of vdem e_total_fuel_income_pc
+* total deaths in wartime (cow)
+  	* fuzzy set -- can probably get away with descriptive statistics?
+* peacekeeping operations (would be good but would have to be done manually -- perhaps olsen has that coding done already?)
+  	* crisp set
+
+
+
+

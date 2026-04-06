@@ -72,7 +72,7 @@ Q867B: same but for if children's will (1 better, 2 same, 3 worse)
 And then compiling all of those into one.
 ```{r arabbarometer}
 df_list = list()
-arab_cols = c("id", "wave", "dateintr", "q13", "q2061a", "q101", "q102", "q103", "q201a_1", "q201a_3", "q201a_5", "q201a_31b", "q201a_31c", "q201b_6", "q201b_4", "q105a", "q276", "q521_1", "q511", "q867a", "q867b")
+arab_cols = c("id", "wave", "dateintr", "country", "q13", "q2061a", "q101", "q102", "q103", "q114", "q201a_1", "q201a_3", "q201a_5", "q201a_31b", "q201a_31c", "q201b_6", "q201b_4", "q105a", "q276", "q521_1", "q511", "q867a", "q867b")
 
 wave_dates = c("2006-2009", "2010-2011", "2012-2014", "2016-2017", "2018-2019", "July 2020 - April 2021")
 arab = data.frame()
@@ -145,14 +145,16 @@ afro = data.frame()
 afro_cols = c("country", "urbrur", "wave", "dateintr", "q1a", "q1b", "q3a", "q3b", "q4a", "q5a", "q5b", "q7a", "q9a", "q9b", "q9c", "q14", "q14a", "q14c", "q23", "q30", "q31", "q32", "q33", "q37", "q44pt1", "q44pt2", "q44pt3", "q45pt1", "q45pt2", "q45pt3", "q53b", "q88", "q32a", "q32b", "q88a", "q88b", "q87e")
 for (i in 1:9) {
 	current_sav_dir = paste(afro_dir, i, ".sav", sep="")
-	df_list[[i]] = read_sav(current_sav_dir, encoding = "latin1") %>%  # issue with special characters and whatnot
+	df_list[[as.character(i)]] = read_sav(current_sav_dir, encoding = "latin1") %>%  # issue with special characters and whatnot
 		rename_with(tolower) %>% # lowercases col names (in case of some caps, some lower)
-		mutate(wave = as.character(i)) %>%
-		mutate(across(everything(), as.character)) %>%
-		mutate(dateintr = if_else(wave == "1" & is.na(dateintr), "1999-2001", dateintr))
+		mutate(across(everything(), as.character))
 }
-afro = bind_rows(df_list) %>%
+# puts together these dfs and makes a wave col based on name of index in df_list
+afro = bind_rows(df_list, .id = "wave") %>%
+		# sets date based on wave
+		mutate(dateintr = if_else(wave == "1" & is.na(dateintr), "1999-2001", dateintr)) %>%
 	select(afro_cols)
+
 colnames(afro)
 write.csv(afro, "./data/pruned/afro.csv")
 ```
