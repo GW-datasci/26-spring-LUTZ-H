@@ -63,6 +63,27 @@ calibrate(LR$DEV, type="fuzzy", thresholds = "e=
 
 Thresholds for normally distributed data should be 95th, 50th, and 5th percentiles (so test for normality with quantitative conditions or transform to normality \[is that too much?\])
 
+```{r weak}
+intl = read_csv('./data/pruned/intl.csv')
+nonintl = read_csv('./data/pruned/nonintl.csv')
 
-Direct or indirect (look into this)
+calibrate(intl$partipdem_diff, type="fuzzy", thresholds = "e=-0.01, c=0.005, i=0.05")
+calibrate(intl$gdppc_diff, type="fuzzy", thresholds = "e=-1, c=0.005, i=1")
+calibrate(intl$fuel_next, type="fuzzy", thresholds = "e=0.1, c=50, e=300")
+calibrate(intl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=10000, i=100000")
 
+calibrate(nonintl$partipdem_diff, type="fuzzy", thresholds = "e=-0.01, c=0.005, i=0.05")
+calibrate(nonintl$gdppc_diff, type="fuzzy", thresholds = "e=-1, c=0.005, i=1")
+calibrate(nonintl$fuel_next, type="fuzzy", thresholds = "e=0.1, c=50, e=300")
+calibrate(nonintl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=10000, i=100000")
+
+superSubset(as.data.frame(na.omit(intl)), outcome = "is_last_endyr",
+	    conditions = "partipdem_diff, gdppc_diff, fuel_next, TotalBDeaths",
+	    incl.cut= 0.7, cov.cut = 0.6
+)
+
+superSubset(as.data.frame(na.omit(nonintl)), outcome = "is_last_endyr",
+	    conditions = "partipdem_diff, gdppc_diff, fuel_next, TotalBDeaths",
+	    incl.cut= 0.7, cov.cut = 0.6
+)
+```
