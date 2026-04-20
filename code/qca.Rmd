@@ -82,14 +82,25 @@ nonintlCalib = tibble(
 	is_last_endyr = as.integer(nonintl$is_last_endyr)
 )
 
-
-superSubset(as.data.frame(na.omit(intlCalib)), outcome = "is_last_endyr",
-	    conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
-	    incl.cut= 0.9, cov.cut = 0.5
+intlTT = truthTable(
+	data = as.data.frame(na.omit(intlCalib)),
+	outcome = "is_last_endyr",
+	conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
+	incl.cut = 0.8,
+	show.cases = TRUE
+)
+nonintlTT = truthTable(
+	data = as.data.frame(na.omit(nonintlCalib)),
+	outcome = "is_last_endyr",
+	conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
+	incl.cut = 0.8,
+	show.cases = TRUE
 )
 
-superSubset(as.data.frame(na.omit(nonintlCalib)), outcome = "is_last_endyr",
-	    conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
-	    incl.cut= 0.9, cov.cut = 0.5
-)
+intlMin = minimize(intlTT, details = TRUE, show.cases = TRUE)
+nonintlMin = minimize(nonintlTT, details = TRUE, show.cases = TRUE)
+
+print(intlMin)
+print(nonintlMin)
+
 ```
