@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r packages}
-lapply(c("readr", "dplyr", "haven", "ggplot2", "QCA"), library, character.only = TRUE)
+lapply(c("readr", "dplyr", "haven", "ggplot2", "QCA", "tibble"), library, character.only = TRUE)
 # haven is for dealing with stata formata
 ```
 
@@ -67,23 +67,29 @@ Thresholds for normally distributed data should be 95th, 50th, and 5th percentil
 intl = read_csv('./data/pruned/intl.csv')
 nonintl = read_csv('./data/pruned/nonintl.csv')
 
-calibrate(intl$partipdem_diff, type="fuzzy", thresholds = "e=-0.01, c=0.005, i=0.05")
-calibrate(intl$gdppc_diff, type="fuzzy", thresholds = "e=-1, c=0.005, i=1")
-calibrate(intl$fuel_next, type="fuzzy", thresholds = "e=0.1, c=50, e=300")
-calibrate(intl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=10000, i=100000")
-
-calibrate(nonintl$partipdem_diff, type="fuzzy", thresholds = "e=-0.01, c=0.005, i=0.05")
-calibrate(nonintl$gdppc_diff, type="fuzzy", thresholds = "e=-1, c=0.005, i=1")
-calibrate(nonintl$fuel_next, type="fuzzy", thresholds = "e=0.1, c=50, e=300")
-calibrate(nonintl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=10000, i=100000")
-
-superSubset(as.data.frame(na.omit(intl)), outcome = "is_last_endyr",
-	    conditions = "partipdem_diff, gdppc_diff, fuel_next, TotalBDeaths",
-	    incl.cut= 0.7, cov.cut = 0.6
+intlCalib = tibble( 
+	partipdem_diff = calibrate(intl$partipdem_diff, type="fuzzy", thresholds = "e=-0.002, c=0.0015, i=0.035"),
+	gdppc_diff = calibrate(intl$gdppc_diff, type="fuzzy", thresholds = "e=-0.04, c=0.1, i=0.3"),
+	fuel_next = calibrate(intl$fuel_next, type="fuzzy", thresholds = "e=0.05, c=50, e=400"),
+	total_deaths = calibrate(intl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=7500, i=30000"),
+	is_last_endyr = as.integer(intl$is_last_endyr)
+)
+nonintlCalib = tibble( 
+	partipdem_diff = calibrate(nonintl$partipdem_diff, type="fuzzy", thresholds = "e=-0.002, c=0.0015, i=0.035"),
+	gdppc_diff = calibrate(nonintl$gdppc_diff, type="fuzzy", thresholds = "e=-0.04, c=0.1, i=0.3"),
+	fuel_next = calibrate(nonintl$fuel_next, type="fuzzy", thresholds = "e=0.1, c=50, e=400"),
+	total_deaths = calibrate(nonintl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=7500, i=30000"),
+	is_last_endyr = as.integer(nonintl$is_last_endyr)
 )
 
-superSubset(as.data.frame(na.omit(nonintl)), outcome = "is_last_endyr",
-	    conditions = "partipdem_diff, gdppc_diff, fuel_next, TotalBDeaths",
-	    incl.cut= 0.7, cov.cut = 0.6
+
+superSubset(as.data.frame(na.omit(intlCalib)), outcome = "is_last_endyr",
+	    conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
+	    incl.cut= 0.9, cov.cut = 0.5
+)
+
+superSubset(as.data.frame(na.omit(nonintlCalib)), outcome = "is_last_endyr",
+	    conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
+	    incl.cut= 0.9, cov.cut = 0.5
 )
 ```

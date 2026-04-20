@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.1.2)  23 MAR 2026 17:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.3.31)  6 APR 2026 19:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -107,33 +107,33 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 8.
 
-Overfull \hbox (21.48227pt too wide) in paragraph at lines 32--33
-\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/2b5659e47330e87302c099942d7020f07faba595 
- []
-
-
-Overfull \hbox (18.42668pt too wide) in paragraph at lines 33--34
-\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/16871bb4cfe0e083e6c77f88173a754f933ba296 
+Overfull \hbox (20.92668pt too wide) in paragraph at lines 32--33
+\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/511e8216619297fcac801fec448b1d6da4a334b3 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (14.53783pt too wide) in paragraph at lines 33--34
+\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/9d1f19cf673ff18369a1f22a674bf21c989dd0eb 
+ []
+
+[2]
 No file template.bbl.
 (./template.aux) ) 
 Here is how much of TeX's memory you used:
- 1059 strings out of 477985
- 18106 string characters out of 5839381
- 1857388 words of memory out of 6000000
- 21314 multiletter control sequences out of 15000+600000
- 515927 words of font info for 44 fonts, out of 8000000 for 9000
+ 1061 strings out of 477985
+ 18127 string characters out of 5839380
+ 1859388 words of memory out of 6000000
+ 21315 multiletter control sequences out of 15000+600000
+ 516273 words of font info for 45 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 57i,6n,62p,380b,196s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on template.pdf (1 page, 58725 bytes).
+ 57i,6n,62p,628b,196s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on template.pdf (2 pages, 69588 bytes).
 PDF statistics:
- 28 PDF objects out of 1000 (max. 8388607)
- 16 compressed objects within 1 object stream
+ 36 PDF objects out of 1000 (max. 8388607)
+ 21 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

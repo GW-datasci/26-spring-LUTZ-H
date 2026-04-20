@@ -1,6 +1,6 @@
 \documentclass[10pt]{article}
 \usepackage[margin=1in]{geometry}
-\title{Weekly 6}
+\title{Weekly 8}
 \author{Hazel Lutz}
 \date{\today}
 
@@ -11,26 +11,26 @@
 \section*{Weekly Progress (5 points)}
 % List below at least FIVE significant updates
 \begin{enumerate}
-	\item Added the import of some more survey data for the Middle East, which I somehow forgot to do prior. Whoops! At least it's all good now.
-	\item Created indices based on survey questions that are similar or about the same between different regions.
-	\item Created the (hopefully) final merged dataset prepped for the actual QCA next week (I'll do the writeup for the columns and process on this part early next week as well).
-	\item Selected calibrations for QCA for each column.
-	\item Imported dataset into QCA rmd file and began the actual process! Yay!
+	\item Settled on calibration for QCA for each of my variables based on the scale on which indicators were made and theory surrounding them -- these are not final answers, but they're good enough for right now, and I can adjust as I go.
+	\item Modified the conflict dataset to include a boolean outcome on the recurrence of war (defined just as whether or not there was continued fighting along the same lines, or whether the war terminated for some time after a cease fire or what have you). This is the dependent variable. Some of this work was dealing with annoying regex stuff to get it to get all start/end cols, but it's all done now.
+	\item Hopefully put together a final dataset for one of the last times -- unfortunately, some compromises were made (see challenges). This now includes the change in participatory democracy and change in GDP, as it's important to recovery for people to feel like their situation is improving rather than just being "good" on some economic scale. It might be worth using the Gini index later for economic inequality or looking for more sophisticated measures than change in GDP per capita. 
+	\item Performed calibration for my two datasets (one with substantial international involvement, one without), which wasn't honestly a ton of code but could get messier later and did involve a decent amount of bug fixing since there's few StackExchange stuff for this package. It's kind of niche.
+	\item Performed the QCA and got preliminary results! I need to learn how to interpret them still, how I can modify it to get more info, and use some other data potentially, but fortunately, at this point, most of the coding work is done and it's on to writing things up and modifying what I already have.
 \end{enumerate}
 \section*{Challenges (3 points)}
 % List below at least THREE significant challenges
 \begin{enumerate}
-	\item 
-	\item 
-	\item 
+	\item Unfortunately, in trying to get things to work for the QCA, I had to eliminate some data I planned to use. It would have restricted my dataset a little to include so much public opinion data, but I was willing to live with that, but upon implementing it I learned that the questions were varying too much between years for to use them without extensively consulting every survey wave's codebook, which would take a \emph{while} and be entirely manual. I can't justify that right now, since I need to work on outputting something for certain, but it's something to work on if I have time.
+	\item The calibration/deciding between crisp and fuzzy sets is something that is somewhat difficult for the time being, as I am having to set the parameters that will influence my conclusions, and I worry that how that calibration is done is impacting my preliminary results too much. I'm not sure how to conduct a sensitivity analysis for this sort of thing, so it'll just be more reading.
+	\item Debugging code problems with the QCA package is a pain, as some of the error handling isn't as specific or focused on what I'm doing as I would like, and frequently I would get errors that would involve the way that the package was actually programmed, which I am not familiar with. Everything was something I could handle, fortunately, but it's a pain.
 \end{enumerate}
 
 \section*{Code Commits (2 points)}
 % GitHub repo: [url of your GitHub project repo]
 % List below at least TWO significant code commits
 \begin{enumerate}
-	\item 
-	\item 
+	\item Put together datasets for hopefully the last time, set up QCA:\\ https://github.com/GW-datasci/26-spring-LUTZ-H/commit/511e8216619297fcac801fec448b1d6da4a334b3
+	\item Performed preliminary QCA, setup for next time: \\ https://github.com/GW-datasci/26-spring-LUTZ-H/commit/9d1f19cf673ff18369a1f22a674bf21c989dd0eb
 \end{enumerate}
 
 \clearpage
