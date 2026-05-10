@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.3.31)  6 APR 2026 19:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.3.31)  20 APR 2026 21:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -106,16 +106,20 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 8.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 8.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 23.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 23.
 
-Overfull \hbox (20.92668pt too wide) in paragraph at lines 32--33
-\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/511e8216619297fcac801fec448b1d6da4a334b3 
+Overfull \hbox (24.81555pt too wide) in paragraph at lines 32--33
+\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/bae4b223c064ae1ee6c4209055b55b17811724d5 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (14.53783pt too wide) in paragraph at lines 33--34
-\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/9d1f19cf673ff18369a1f22a674bf21c989dd0eb 
+Overfull \hbox (21.75998pt too wide) in paragraph at lines 33--34
+\OT1/cmr/m/n/10 https://github.com/GW-datasci/26-spring-LUTZ-H/commit/89fdc18c0b755640c8567de6043884c3ac7c1d5a 
  []
 
 [2]
@@ -123,14 +127,14 @@ No file template.bbl.
 (./template.aux) ) 
 Here is how much of TeX's memory you used:
  1061 strings out of 477985
- 18127 string characters out of 5839380
- 1859388 words of memory out of 6000000
- 21315 multiletter control sequences out of 15000+600000
- 516273 words of font info for 45 fonts, out of 8000000 for 9000
+ 18134 string characters out of 5839380
+ 1858388 words of memory out of 6000000
+ 21316 multiletter control sequences out of 15000+600000
+ 515927 words of font info for 44 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 57i,6n,62p,628b,196s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on template.pdf (2 pages, 69588 bytes).
+ 57i,6n,62p,780b,196s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
+Output written on template.pdf (2 pages, 68095 bytes).
 PDF statistics:
  36 PDF objects out of 1000 (max. 8388607)
  21 compressed objects within 1 object stream

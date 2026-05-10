@@ -226,7 +226,21 @@ colnames(afro_df)
 ```{r vdem}
 vdem = read_csv("./data/V-Dem-CY-FullOthers-v16_csv/V-Dem-CY-Full+Others-v16.csv")
 vdem_filtered = vdem %>%
-	select(country_name, year, v2x_polyarchy, v2x_partipdem, v2x_egaldem, v2x_accountability, e_peaveduc, e_gdppc, e_total_fuel_income_pc)
-# these are: electoral dem, participatory dem, egalitarian dem, accountability of government, education, gdp per captia, petroleum/coal/natural gas wealth)
+	select(country_name, year, v2x_polyarchy, v2x_partipdem, v2x_egaldem, v2x_accountability, e_peaveduc, e_gdppc, e_total_oil_income_pc)
+# these are: electoral dem, participatory dem, egalitarian dem, accountability of government, education, gdp per captia, petro wealth)
 write_csv(vdem_filtered, "./data/pruned/vdem.csv")
+```
+
+```{r oil}
+library(WDI)
+library(dplyr)
+
+oil = WDI(
+	  indicator = "NY.GDP.PETR.RT.ZS",
+	  start = 1988,   
+	  end = 2014,
+	  extra = TRUE   
+) %>%
+	rename(oil_rents = NY.GDP.PETR.RT.ZS) %>%
+	select(country, year, oil_rents)
 ```

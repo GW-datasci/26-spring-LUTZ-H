@@ -115,6 +115,13 @@ arab = arab_old %>%
 		mutate(economic_improve = if_else(economic_improve %in% c(1:3), as.character(economic_improve), NA_character_))
 ```
 
+```{r oil}
+oil = read_csv("./data/pruned/oil.csv")
+oil_prep = oil %>%
+	arrange(country, year) %>%
+	group_by(country) 
+```
+
 ```{r merge_for_now}
 intl_merged = intl_cow %>%
 	pivot_longer(
@@ -151,26 +158,33 @@ vdem_prep = vdem %>%
 	mutate(
 	       gdppc_next = lead(e_gdppc, n=1, order_by = year),
 	       partipdem_next = lead(v2x_partipdem, n=1, order_by = year),
-	       fuel_next = lead(e_total_fuel_income_pc, n=1, order_by = year),
 	       gdppc_diff = gdppc_next - e_gdppc,
 	       partipdem_diff = partipdem_next - v2x_partipdem
 	) %>%
 	ungroup() %>%
-	select(country_name, year, gdppc_diff, partipdem_diff, fuel_next)
+	select(country_name, year, gdppc_diff, partipdem_diff)
 
 full_intl = intl_merged_filtered %>%
 	left_join(
 		  vdem_prep,
 		  by = c("SideA" = "country_name", "EndYr" = "year")
 	) %>%
-	select(WarNum, WarName, SideA, episode, EndYr, is_last_endyr, TotalBDeaths, gdppc_diff, partipdem_diff, fuel_next)
+	left_join(
+		  oil_prep,
+		  by = c("SideA" = "country", "EndYr" = "year")
+	) %>%
+	select(WarNum, WarName, SideA, episode, EndYr, is_last_endyr, TotalBDeaths, gdppc_diff, partipdem_diff, oil_rents)
 
 full_nonintl = nonintl_merged_filtered %>%
 	left_join(
 		  vdem_prep,
 		  by = c("SideA" = "country_name", "EndYr" = "year")
 	) %>%
-	select(WarNum, WarName, SideA, episode, EndYr, is_last_endyr, TotalBDeaths, gdppc_diff, partipdem_diff, fuel_next)
+	left_join(
+		  oil_prep,
+		  by = c("SideA" = "country", "EndYr" = "year")
+	) %>%
+	select(WarNum, WarName, SideA, episode, EndYr, is_last_endyr, TotalBDeaths, gdppc_diff, partipdem_diff, oil_rents)
 
 write_csv(full_intl, "./data/pruned/intl.csv")
 write_csv(full_nonintl, "./data/pruned/nonintl.csv")

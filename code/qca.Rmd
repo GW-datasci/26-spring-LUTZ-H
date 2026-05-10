@@ -64,43 +64,75 @@ calibrate(LR$DEV, type="fuzzy", thresholds = "e=
 Thresholds for normally distributed data should be 95th, 50th, and 5th percentiles (so test for normality with quantitative conditions or transform to normality \[is that too much?\])
 
 ```{r weak}
-intl = read_csv('./data/pruned/intl.csv')
-nonintl = read_csv('./data/pruned/nonintl.csv')
+intl = as.data.frame(na.omit(read_csv('./data/pruned/intl.csv')))
+nonintl = as.data.frame(na.omit(read_csv('./data/pruned/nonintl.csv')))
 
 intlCalib = tibble( 
-	partipdem_diff = calibrate(intl$partipdem_diff, type="fuzzy", thresholds = "e=-0.002, c=0.0015, i=0.035"),
+	partipdem_diff = calibrate(intl$partipdem_diff, type="fuzzy", thresholds = "e=-0.001, c=0.0015, i=0.03"),
 	gdppc_diff = calibrate(intl$gdppc_diff, type="fuzzy", thresholds = "e=-0.04, c=0.1, i=0.3"),
-	fuel_next = calibrate(intl$fuel_next, type="fuzzy", thresholds = "e=0.05, c=50, e=400"),
-	total_deaths = calibrate(intl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=7500, i=30000"),
+	oil_rents = calibrate(intl$oil_rents, type="fuzzy", thresholds = "e=0, c=0.15, i=0.35"),
+	total_deaths = calibrate(intl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=8000, i=30000"),
+	un_pko = intl$un_pko,
 	is_last_endyr = as.integer(intl$is_last_endyr)
 )
 nonintlCalib = tibble( 
-	partipdem_diff = calibrate(nonintl$partipdem_diff, type="fuzzy", thresholds = "e=-0.002, c=0.0015, i=0.035"),
+	partipdem_diff = calibrate(nonintl$partipdem_diff, type="fuzzy", thresholds = "e=-0.001, c=0.0015, i=0.03"),
 	gdppc_diff = calibrate(nonintl$gdppc_diff, type="fuzzy", thresholds = "e=-0.04, c=0.1, i=0.3"),
-	fuel_next = calibrate(nonintl$fuel_next, type="fuzzy", thresholds = "e=0.1, c=50, e=400"),
-	total_deaths = calibrate(nonintl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=7500, i=30000"),
+	oil_rents = calibrate(nonintl$oil_rents, type="fuzzy", thresholds = "e=0, c=0.15, i=0.35"),
+	total_deaths = calibrate(nonintl$TotalBDeaths, type="fuzzy", thresholds = "e=1000, c=8000, i=30000"),
+	un_pko = nonintl$un_pko,
 	is_last_endyr = as.integer(nonintl$is_last_endyr)
 )
 
+pof(
+  setms = "gdppc_diff + partipdem_diff + oil_rents + total_deaths + un_pko",
+  outcome = "is_last_endyr",
+  data = as.data.frame(na.omit(intlCalib)),
+  relation = "necessity"
+)
+
 intlTT = truthTable(
-	data = as.data.frame(na.omit(intlCalib)),
+	data = intlCalib,
 	outcome = "is_last_endyr",
-	conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
+	conditions = "partipdem_diff, oil_rents, total_deaths, un_pko",
 	incl.cut = 0.8,
+	cov.cut = 0.5,
 	show.cases = TRUE
 )
 nonintlTT = truthTable(
-	data = as.data.frame(na.omit(nonintlCalib)),
+	data = nonintlCalib,
 	outcome = "is_last_endyr",
-	conditions = "partipdem_diff, gdppc_diff, fuel_next, total_deaths",
+	conditions = "partipdem_diff, oil_rents, total_deaths, un_pko",
 	incl.cut = 0.8,
+	cov.cut = 0.5,
 	show.cases = TRUE
 )
 
 intlMin = minimize(intlTT, details = TRUE, show.cases = TRUE)
 nonintlMin = minimize(nonintlTT, details = TRUE, show.cases = TRUE)
 
+print("Internationalized")
 print(intlMin)
+print("Non-Internationalized")
 print(nonintlMin)
 
+```
+
+```{r vis}
+png("./report/images/partipdem.png", width = 800, height = 600)
+plot(sort(calibrate(c(intl$partipdem_diff, nonintl$partipdem_diff), type="fuzzy", thresholds = "e=-0.001, c=0.0015, i=0.03")), main="Distribution of Change in Participatory Democracy", ylab="Fuzzy set membership")
+dev.off()
+png("./report/images/oil_rents.png", width = 800, height = 600)
+plot(sort(calibrate(c(intl$oil_rents, nonintl$oil_rents), type="fuzzy", thresholds = "e=0, c=0.15, i=0.35")), main="Distribution of Oil Rents as % of GDP", ylab="Fuzzy set membership")
+dev.off()
+png("./report/images/gdppc_diff.png", width = 800, height = 600)
+plot(sort(calibrate(c(intl$gdppc_diff, nonintl$gdppc_diff), type="fuzzy", thresholds = "e=-0.04, c=0.1, i=0.3")), main="Distribution of Change in GDP Per Capita", ylab="Fuzzy set membership")
+dev.off()
+png("./report/images/deaths.png", width = 800, height = 600)
+plot(sort(calibrate(c(intl$TotalBDeaths, nonintl$TotalBDeaths), type="fuzzy", thresholds = "e=1000, c=7500, i=30000")), main="Distribution of Fatalities", ylab="Fuzzy set membership")
+dev.off()
+png("./report/images/un_pko.png", width = 800, height = 600)
+hist(c(intl$un_pko, nonintl$un_pko), breaks=c(-0.5, 0.5, 1.5), xaxt="n", main="Histogram of Presence of UN PKO", xlab="")
+axis(1, at = c(0, 1), labels = c("Absent", "Present"))
+dev.off()
 ```

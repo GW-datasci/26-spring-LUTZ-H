@@ -1,0 +1,21 @@
+---
+title: "make sampledata"
+output: html_document
+---
+
+```{r}
+# Replace with your file path or use a built-in dataset
+vdem_full = read.csv('./data/V-Dem-CY-FullOthers-v16_csv/V-Dem-CY-Full+Others-v16.csv')
+
+write.csv(head(vdem_full, 10), file='./data/sampledata/vdem-sample.csv')
+```
+
+
+```{r save}
+output_path <- "first_10_rows.csv"
+
+write.csv(first_10, file = output_path, row.names = FALSE)
+
+cat("Saved", nrow(first_10), "rows to:", output_path)
+```
+
